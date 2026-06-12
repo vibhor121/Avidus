@@ -7,14 +7,14 @@ const generateToken = (id) =>
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
     if (!name || !email || !password)
       return res.status(400).json({ message: 'Name, email and password are required' });
 
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: 'Email already registered' });
 
-    const user = await User.create({ name, email, password, role: role || 'user' });
+    const user = await User.create({ name, email, password, role: 'user' });
 
     await ActivityLog.create({
       user: user._id,
