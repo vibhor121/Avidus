@@ -140,17 +140,35 @@ Frontend runs at: `http://localhost:5173`
 
 ### 4. Create First Admin User
 
-Since registration always creates a regular user, use this curl command once to create your first account:
+#### Our Approach to Admin Creation
 
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Admin","email":"admin@test.com","password":"123456"}'
+In this project, we made a deliberate security decision — **the registration API never allows anyone to self-assign the admin role**. This prevents a malicious user from passing `role: "admin"` in the request body and gaining elevated access.
+
+Instead, the first admin is created using a **server-side seed script** (`seed.js`) that directly writes to MongoDB using the Mongoose model, bypassing the HTTP API entirely. This is the same pattern used by professional applications for bootstrapping the first privileged user.
+
+```
+Normal Registration (API)  →  role always = "user"  (enforced in code)
+Seed Script (server-side)  →  role = "admin"        (only way to create admin)
 ```
 
-Then open MongoDB Atlas or Compass, find your user, and manually change `role` from `"user"` to `"admin"`.
+#### Run the Seed Script
 
-After that, login at `http://localhost:5173/login` and you will be redirected to the admin dashboard automatically.
+```bash
+cd backend
+node seed.js
+```
+
+This creates the admin account directly in MongoDB. The script is listed in `.gitignore` so it never gets committed to version control.
+
+#### Default Admin Credentials
+
+```
+Email    : admin@taskmanager.com
+Password : Admin@123
+Role     : admin
+```
+
+Login at `http://localhost:5173/login` — admin users are automatically redirected to the Admin Dashboard at `/admin/overview`.
 
 ---
 
