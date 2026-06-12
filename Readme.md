@@ -26,7 +26,7 @@
 
 | Service | URL |
 |---------|-----|
-| Frontend | https://avidus-jet.vercel.app/login |
+| Frontend | https://avidus-jet.vercel.app |
 | Backend API | https://avidus-laap.onrender.com/api/health |
 
 ---
